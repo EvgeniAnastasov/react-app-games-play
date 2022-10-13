@@ -11,8 +11,6 @@ export const GameDetails = ({ games, addComment }) => {
 
     const game = games.find(x => x._id == gameId);
 
-    console.log(game.comment);
-
     const addCommenthandler = (e) => {
         e.preventDefault();
         addComment(gameId, `${comment.username}: ${comment.comment}`)
