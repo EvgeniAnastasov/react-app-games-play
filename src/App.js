@@ -5,6 +5,7 @@ import { Home } from './components/Home/Home';
 import { useEffect, useState } from 'react';
 import * as gameService from './services/gameService'
 import uniqid from 'uniqid'
+import { AuthContext } from './context/AuthContext';
 
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import { Login } from './components/Login/Login';
@@ -16,7 +17,12 @@ import { GameDetails } from './components/GameDetails/GameDetails';
 function App() {
 
 	const [games, setGames] = useState([]);
+	const [auth, setAuth] = useState({});
 	const navigate = useNavigate();
+
+	const userLogin = (authData) => {
+		setAuth(authData)
+	}
 
 	const addComment = (gameId, comment) => {
 		setGames(state => {
@@ -52,30 +58,32 @@ function App() {
 
 
 	return (
-		<div id="box">
 
-			<Header />
+		<AuthContext.Provider value={{user: auth, userLogin}}>
+			<div id="box">
 
-			{/* Main Content */}
-			<main id="main-content">
+				<Header />
 
-				<Routes>
+				{/* Main Content */}
+				<main id="main-content">
 
-					<Route path='/' element={<Home games={games} />} />
-					<Route path='/login' element={<Login />} />
-					<Route path='/register' element={<Register />} />
-					<Route path='/create' element={<CreateGame addGameHandler={addGameHandler}/>} />
-					<Route path='/catalog' element={<Catalog games={games} />} />
-					<Route path='/catalog/:gameId' element={<GameDetails games={games} addComment={addComment} />} />
+					<Routes>
 
-				</Routes>
+						<Route path='/' element={<Home games={games} />} />
+						<Route path='/login' element={<Login />} />
+						<Route path='/register' element={<Register />} />
+						<Route path='/create' element={<CreateGame addGameHandler={addGameHandler} />} />
+						<Route path='/catalog' element={<Catalog games={games} />} />
+						<Route path='/catalog/:gameId' element={<GameDetails games={games} addComment={addComment} />} />
 
-			</main>
-			{/*Home Page*/}
+					</Routes>
+
+				</main>
+				{/*Home Page*/}
 
 
-		</div>
-
+			</div>
+		</AuthContext.Provider>
 	);
 }
 

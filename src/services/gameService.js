@@ -1,8 +1,5 @@
+import * as requiest from "./requester";
 
 const baseUrl = 'http://localhost:3030';
 
-export const getAll = () => {
-    return fetch(`${baseUrl}/data/games`)
-    .then(res => res.json())
-    
-}
+export const getAll = () => requiest.get(`${baseUrl}/data/games`);
