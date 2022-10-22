@@ -18,3 +18,6 @@ export const logout = async (accessToken) => {
         console.log(error);
     }
 }
+
+export const register = (email, password) => 
+    requiest.post(`${baseUrl}/register`, {email, password})
