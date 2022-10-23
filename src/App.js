@@ -14,11 +14,12 @@ import { Register } from './components/Register/Register';
 import { CreateGame } from './components/CreateGame/CreateGame';
 import { Catalog } from './components/Catalog/Catalog';
 import { GameDetails } from './components/GameDetails/GameDetails';
+import {useLocalStorage} from './hooks/useLocalStorage'
 
 function App() {
 
 	const [games, setGames] = useState([]);
-	const [auth, setAuth] = useState({});
+	const [auth, setAuth] = useLocalStorage('auth', {});
 	const navigate = useNavigate();
 
 	const userLogin = (authData) => {
