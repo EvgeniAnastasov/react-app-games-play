@@ -4,17 +4,18 @@ import { Home } from './components/Home/Home';
 
 import { useEffect, useState } from 'react';
 import * as gameService from './services/gameService'
-import uniqid from 'uniqid'
 import { AuthContext } from './context/AuthContext';
+import { GameContext } from './context/GameContext'
 
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import { Login } from './components/Login/Login';
 import { Logout } from './components/Logout/Logout';
 import { Register } from './components/Register/Register';
 import { CreateGame } from './components/CreateGame/CreateGame';
+import { EditGame } from './components/EditGame/EditGame';
 import { Catalog } from './components/Catalog/Catalog';
 import { GameDetails } from './components/GameDetails/GameDetails';
-import {useLocalStorage} from './hooks/useLocalStorage'
+import { useLocalStorage } from './hooks/useLocalStorage'
 
 function App() {
 
@@ -32,7 +33,7 @@ function App() {
 
 	const addComment = (gameId, comment) => {
 		setGames(state => {
-			const game = state.find(x => x._id == gameId);
+			const game = state.find(x => x._id === gameId);
 
 			const comments = game.comments || [];
 			comments.push(comment)
@@ -44,16 +45,19 @@ function App() {
 		})
 	}
 
-	const addGameHandler = (gameData) => {
+	const gameAdd = (gameData) => {
 		setGames(state => [
 			...state,
-			{
-				...gameData,
-				_id: uniqid()
-			}
+			// console.log(gameData),
+			gameData,
 		]);
+
 		navigate(`/catalog`)
 	};
+
+	const gameEdit = (gameId, gameData) => {
+		setGames(state => state.map(x => x._id === gameId ? gameData : x));
+	}
 
 
 	useEffect(() => {
@@ -65,28 +69,33 @@ function App() {
 
 	return (
 
-		<AuthContext.Provider value={{ user: auth, userLogin, userLogout}}>
+		<AuthContext.Provider value={{ user: auth, userLogin, userLogout }}>
 			<div id="box">
 
 				<Header />
 
 				{/* Main Content */}
-				<main id="main-content">
 
-					<Routes>
+				<GameContext.Provider value={{ games, gameAdd, gameEdit }}>
 
-						<Route path='/' element={<Home games={games} />} />
-						<Route path='/login' element={<Login />} />
-						<Route path='logout' element={<Logout />} />
-						<Route path='/register' element={<Register />} />
-						<Route path='/create' element={<CreateGame addGameHandler={addGameHandler} />} />
-						<Route path='/catalog' element={<Catalog games={games} />} />
-						<Route path='/catalog/:gameId' element={<GameDetails games={games} addComment={addComment} />} />
+					<main id="main-content">
 
-					</Routes>
+						<Routes>
 
-				</main>
-				{/*Home Page*/}
+							<Route path='/' element={<Home games={games} />} />
+							<Route path='/login' element={<Login />} />
+							<Route path='/logout' element={<Logout />} />
+							<Route path='/register' element={<Register />} />
+							<Route path='/create' element={<CreateGame />} />
+							<Route path='/games/:gameId/edit' element={<EditGame />} />
+							<Route path='/catalog' element={<Catalog games={games} />} />
+							<Route path='/catalog/:gameId' element={<GameDetails games={games} addComment={addComment} />} />
+
+						</Routes>
+
+					</main>
+				</GameContext.Provider>
+				Home Page
 
 
 			</div>

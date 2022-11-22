@@ -18,7 +18,6 @@ export const Login = () => {
 
         authService.login(email, password)
             .then(authData => {
-                console.log(authData);
                 userLogin(authData);
                 navigate('/')
             })

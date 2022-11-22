@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom"
+import * as gameService from '../../services/gameService'
 
-export const GameDetails = ({ games, addComment }) => {
+export const GameDetails = ({ addComment }) => {
 
     const { gameId } = useParams();
+    const [currentGame, setCurrentGame] = useState({});
+
     const [comment, setComment] = useState({
         username: '',
         comment: '',
@@ -14,7 +17,12 @@ export const GameDetails = ({ games, addComment }) => {
         comment: '',
     })
 
-    const game = games.find(x => x._id == gameId);
+    useEffect(() => {
+        gameService.getOne(gameId)
+        .then(result => {
+            setCurrentGame(result);
+        })
+    }, [])
 
     const addCommenthandler = (e) => {
         e.preventDefault();
@@ -37,7 +45,7 @@ export const GameDetails = ({ games, addComment }) => {
                 ...state,
                 username: 'username must be more than 4 characters'
             }))
-            }
+        }
     }
 
     return (
@@ -45,13 +53,13 @@ export const GameDetails = ({ games, addComment }) => {
             <h1>Game Details</h1>
             <div className="info-section">
                 <div className="game-header">
-                    <img className="game-img" src={game.imageUrl} />
-                    <h1>{game.title}</h1>
-                    <span className="levels">{game.maxLevel}</span>
-                    <p className="type">{game.category}</p>
+                    <img className="game-img" src={currentGame.imageUrl} />
+                    <h1>{currentGame.title}</h1>
+                    <span className="levels">{currentGame.maxLevel}</span>
+                    <p className="type">{currentGame.category}</p>
                 </div>
                 <p className="text">
-                    {game.summary}
+                    {currentGame.summary}
                 </p>
                 {/* Bonus ( for Guests and Users ) */}
                 <div className="details-comments">
@@ -59,26 +67,26 @@ export const GameDetails = ({ games, addComment }) => {
                     <ul>
                         {/* list all comments for current game (If any) */}
 
-                        {game.comments?.map(x =>
+                        {/* {game.comments?.map(x =>
                             <li className="comment">
                                 <p>{x}</p>
                             </li>
-                        )}
+                        )} */}
                     </ul>
                     {/* Display paragraph: If there are no games in the database */}
 
-                    {!game.comments &&
+                    {/* {!game.comments &&
                         <p className="no-comment">No comments.</p>
-                    }
+                    } */}
                 </div>
                 {/* Edit/Delete buttons ( Only for creator of this game )  */}
                 <div className="buttons">
-                    <a href="#" className="button">
+                    <Link to={`/games/${gameId}/edit`} className="button">
                         Edit
-                    </a>
-                    <a href="#" className="button">
+                    </Link>
+                    <Link to="#" className="button">
                         Delete
-                    </a>
+                    </Link>
                 </div>
             </div>
             {/* Bonus */}
@@ -96,8 +104,8 @@ export const GameDetails = ({ games, addComment }) => {
                         value={comment.username}
                     />
 
-                    {error.username && 
-                        <div style={{color: 'red'}}>{error.username}</div>
+                    {error.username &&
+                        <div style={{ color: 'red' }}>{error.username}</div>
                     }
 
                     <textarea

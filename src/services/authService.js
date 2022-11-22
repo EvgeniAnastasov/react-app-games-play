@@ -5,6 +5,7 @@ const baseUrl = 'http://localhost:3030/users';
 
 export const login = (email, password) =>
     requiest.post(`${baseUrl}/login`, { email, password });
+    
 
 export const logout = async (accessToken) => {
     try {

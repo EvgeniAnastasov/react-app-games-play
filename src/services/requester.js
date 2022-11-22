@@ -17,10 +17,12 @@ const requiest = async (method, url, data) => {
         if (method === 'GET') {
             buildRequest = fetch(url, { headers });
         }
+
+        
         else {
             buildRequest = fetch(url, {
                 method,
-                heareds: {
+                headers: {
                     ...headers,
                     'content-type': 'application/json'
                 },
@@ -29,8 +31,6 @@ const requiest = async (method, url, data) => {
         }
 
         const response = await buildRequest;
-
-        console.log(response)
 
         const result = await response.json();
 
