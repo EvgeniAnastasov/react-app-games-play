@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom"
+import { useContext, useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom"
+import { GameContext } from "../../context/GameContext";
 import * as gameService from '../../services/gameService'
 
 export const GameDetails = ({ addComment }) => {
 
     const { gameId } = useParams();
     const [currentGame, setCurrentGame] = useState({});
+    const navigate = useNavigate();
+    const { gameDelete } = useContext(GameContext);
 
     const [comment, setComment] = useState({
         username: '',
@@ -19,9 +22,9 @@ export const GameDetails = ({ addComment }) => {
 
     useEffect(() => {
         gameService.getOne(gameId)
-        .then(result => {
-            setCurrentGame(result);
-        })
+            .then(result => {
+                setCurrentGame(result);
+            })
     }, [])
 
     const addCommenthandler = (e) => {
@@ -47,6 +50,23 @@ export const GameDetails = ({ addComment }) => {
             }))
         }
     }
+
+    const onDelete = (e) => {
+        e.preventDefault()
+
+        // debugger
+
+        gameService.del(gameId)
+            .then(result => {
+                gameDelete(gameId)
+                navigate(`/catalog`)
+            })
+
+        // gameService.del(gameId)
+        // navigate(`/catalog`)
+
+    }
+
 
     return (
         <section id="game-details">
@@ -84,7 +104,7 @@ export const GameDetails = ({ addComment }) => {
                     <Link to={`/games/${gameId}/edit`} className="button">
                         Edit
                     </Link>
-                    <Link to="#" className="button">
+                    <Link to="#" onClick={onDelete} className="button">
                         Delete
                     </Link>
                 </div>

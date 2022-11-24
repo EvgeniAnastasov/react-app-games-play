@@ -59,6 +59,10 @@ function App() {
 		setGames(state => state.map(x => x._id === gameId ? gameData : x));
 	}
 
+	const gameDelete = (gameId) => {
+		setGames(state => state.filter(x => x._id !== gameId))
+	}
+
 
 	useEffect(() => {
 		gameService.getAll()
@@ -76,7 +80,7 @@ function App() {
 
 				{/* Main Content */}
 
-				<GameContext.Provider value={{ games, gameAdd, gameEdit }}>
+				<GameContext.Provider value={{ games, gameAdd, gameEdit, gameDelete }}>
 
 					<main id="main-content">
 

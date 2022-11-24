@@ -9,3 +9,5 @@ export const create = (gameData) => requiest.post(baseUrl, gameData);
 export const getOne = (gameId) => requiest.get(`${baseUrl}/${gameId}`);
 
 export const edit = (gameId, gameData) => requiest.put(`${baseUrl}/${gameId}`, gameData);
+
+export const del = (gameId) => requiest.del(`${baseUrl}/${gameId}`)
