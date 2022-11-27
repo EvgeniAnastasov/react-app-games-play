@@ -16,6 +16,7 @@ import { EditGame } from './components/EditGame/EditGame';
 import { Catalog } from './components/Catalog/Catalog';
 import { GameDetails } from './components/GameDetails/GameDetails';
 import { useLocalStorage } from './hooks/useLocalStorage'
+import { Delete } from './components/Delete/Delete';
 
 function App() {
 
@@ -94,6 +95,9 @@ function App() {
 							<Route path='/games/:gameId/edit' element={<EditGame />} />
 							<Route path='/catalog' element={<Catalog games={games} />} />
 							<Route path='/catalog/:gameId' element={<GameDetails games={games} addComment={addComment} />} />
+
+							<Route path='/delete/:gameId' element={<Delete />} />
+
 
 						</Routes>
 

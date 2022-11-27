@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom"
-import { GameContext } from "../../context/GameContext";
 import { AuthContext } from "../../context/AuthContext";
 import * as gameService from '../../services/gameService'
 
@@ -9,7 +8,6 @@ export const GameDetails = ({ addComment }) => {
     const { gameId } = useParams();
     const [currentGame, setCurrentGame] = useState({});
     const navigate = useNavigate();
-    const { gameDelete } = useContext(GameContext);
 
     const { user } = useContext(AuthContext)
 
@@ -54,17 +52,6 @@ export const GameDetails = ({ addComment }) => {
         }
     }
 
-    const onDelete = (e) => {
-        e.preventDefault()
-
-        gameService.del(gameId)
-            .then(() => {
-                gameDelete(gameId)
-                navigate(`/catalog`)
-            })
-
-    }
-
 
     return (
         <section id="game-details">
@@ -80,16 +67,16 @@ export const GameDetails = ({ addComment }) => {
                     {currentGame.summary}
                 </p>
 
-                <p>GameId: {gameId}</p>
+                {/* <p>GameId: {gameId}</p> */}
 
                 {user._id === currentGame._ownerId
                     ? <p style={{ color: 'red' }}>Owner</p>
                     : <p style={{ color: 'red' }}>Not Owner</p>
                 }
 
-                <p>UserID: {user._id}</p>
+                {/* <p>UserID: {user._id}</p> */}
 
-                <p>Owner : {currentGame._ownerId}</p>
+                {/* <p>Owner : {currentGame._ownerId}</p> */}
 
                 {/* Bonus ( for Guests and Users ) */}
                 <div className="details-comments">
@@ -116,7 +103,7 @@ export const GameDetails = ({ addComment }) => {
                         <Link to={`/games/${gameId}/edit`} className="button">
                             Edit
                         </Link>
-                        <Link to="#" onClick={onDelete} className="button">
+                        <Link to={`/delete/${gameId}`} className="button">
                             Delete
                         </Link>
                     </div>}
