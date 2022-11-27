@@ -51,7 +51,7 @@ export const EditGame = () => {
                     <input type="text" id="imageUrl" name="imageUrl" defaultValue={currentGame.imageUrl} />
                     <label htmlFor="summary">Summary:</label>
                     <textarea name="summary" id="summary" defaultValue={currentGame.summary} />
-                    <input className="btn submit" type="submit" defaultValue="Edit Game" />
+                    <input className="btn submit" type="submit" defaultValue="Edit Game" name="Edit"/>
                 </div>
             </form>
         </section>

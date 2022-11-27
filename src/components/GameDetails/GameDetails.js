@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom"
 import { GameContext } from "../../context/GameContext";
+import { AuthContext } from "../../context/AuthContext";
 import * as gameService from '../../services/gameService'
 
 export const GameDetails = ({ addComment }) => {
@@ -9,6 +10,8 @@ export const GameDetails = ({ addComment }) => {
     const [currentGame, setCurrentGame] = useState({});
     const navigate = useNavigate();
     const { gameDelete } = useContext(GameContext);
+
+    const { user } = useContext(AuthContext)
 
     const [comment, setComment] = useState({
         username: '',
@@ -54,16 +57,11 @@ export const GameDetails = ({ addComment }) => {
     const onDelete = (e) => {
         e.preventDefault()
 
-        // debugger
-
         gameService.del(gameId)
-            .then(result => {
+            .then(() => {
                 gameDelete(gameId)
                 navigate(`/catalog`)
             })
-
-        // gameService.del(gameId)
-        // navigate(`/catalog`)
 
     }
 
@@ -81,6 +79,18 @@ export const GameDetails = ({ addComment }) => {
                 <p className="text">
                     {currentGame.summary}
                 </p>
+
+                <p>GameId: {gameId}</p>
+
+                {user._id === currentGame._ownerId
+                    ? <p style={{ color: 'red' }}>Owner</p>
+                    : <p style={{ color: 'red' }}>Not Owner</p>
+                }
+
+                <p>UserID: {user._id}</p>
+
+                <p>Owner : {currentGame._ownerId}</p>
+
                 {/* Bonus ( for Guests and Users ) */}
                 <div className="details-comments">
                     <h2>Comments:</h2>
@@ -100,15 +110,19 @@ export const GameDetails = ({ addComment }) => {
                     } */}
                 </div>
                 {/* Edit/Delete buttons ( Only for creator of this game )  */}
-                <div className="buttons">
-                    <Link to={`/games/${gameId}/edit`} className="button">
-                        Edit
-                    </Link>
-                    <Link to="#" onClick={onDelete} className="button">
-                        Delete
-                    </Link>
-                </div>
+
+                {user._id === currentGame._ownerId &&
+                    <div className="buttons">
+                        <Link to={`/games/${gameId}/edit`} className="button">
+                            Edit
+                        </Link>
+                        <Link to="#" onClick={onDelete} className="button">
+                            Delete
+                        </Link>
+                    </div>}
+
             </div>
+
             {/* Bonus */}
             {/* Add Comment ( Only for logged-in users, which is not creators of the current game ) */}
             <article className="create-comment">
